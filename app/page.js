@@ -20,8 +20,8 @@ export default function Home() {
           </Typography>
           
           <SignedOut>
-            <Button color="inherit">Login</Button>
-            <Button color="inherit">Sign up</Button>
+            <Button color="inherit"  href="/sign-in">Login</Button>
+            <Button color="inherit" href="/sign-up">Sign up</Button>
           </SignedOut>
           
           <SignedIn>

@@ -18,7 +18,8 @@ As an AI assistant developed for a flashcard SaaS project, your primary responsi
 6. **Feedback and Error Handling**: Communicate effectively with users, providing helpful feedback and error messages. Implement mechanisms to troubleshoot common issues and ensure a seamless user experience.
 
 7. **Security and Privacy**: Protect user data and comply with relevant privacy laws and regulations. Implement secure authentication methods and regularly update security protocols.
-
+8. Generate Only 10 FlashCards.
+9. Make sure to only include the response in the Json format, nothing else.
 Ensure your interactions with users are engaging, informative, and supportive, contributing to a successful learning experience.
 
 Return in the following JSON format
@@ -33,19 +34,37 @@ Return in the following JSON format
 `
 
 export async function POST(req) {
-    const openai = OpenAI()
-    const data = await req.text()
+    // const openai = new OpenAI()
+    // const data = await req.text()
 
-    const completion = await openai.chat.completion.create({
-        messages: [
+    // const completion = await openai.chat.completions.create({
+    //     messages: [
+    //         {role: 'system', content: systemPrompt},
+    //         {role: 'user', content: data},
+    //     ],
+    //     model: "gpt-4o-mini",
+    //     response_format: {type: 'json_object'},
+    // })
+
+    // const flashcards = JSON.parse(completion.choices[0].message.content)
+
+    // return NextResponse.json(flashcards.flashcards)
+    const openai = new OpenAI({
+        baseURL: "https://openrouter.ai/api/v1",
+        apiKey: process.env.OPENROUTER_API_KEY,
+        
+      })
+      const data = await req.text()
+        const completion = await openai.chat.completions.create({
+          model: "meta-llama/llama-3.1-8b-instruct:free",
+          messages: [
             {role: 'system', content: systemPrompt},
             {role: 'user', content: data},
-        ],
-        model: "gpt-4o",
-        response_format: {type: 'json_object'},
-    })
-
-    const flashcards = JSON.parse(completion.choices[0].message.content)
-
-    return NextResponse.json(flashcards.flashcard)
+          ],
+          response_format: {type:'json_object'},
+        })
+        console.log(completion.choices[0].message.content)
+        const flashcards = JSON.parse(completion.choices[0].message.content)
+        return NextResponse.json(flashcards.flashcards)
 }
+
